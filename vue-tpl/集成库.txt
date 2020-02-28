@@ -1,0 +1,23 @@
+# Vue中使用normalize.css重置标签样式（使用normalize.css就不用reset.css了）
+
+    step1: 安装normalize.css
+    npm i normalize.css -S
+
+    step2:安装css-loader 和 style-loader
+    npm i css-loader style-loader -D
+
+    step3:在main.js中全局引入normalize.css
+    import "normalize.css";
+
+# Vue中引入reset.css统一标签样式（在main.js中全局引入）
+
+    import '../static/css/reset.css'
+
+
+# Vue中引入rem.js（在main.js中全局引入）
+
+    import '../static/js/rem.js'
+
+# vue开发过程中跨域最简单解决方案
+
+    解开注释 config/index.js的 dev |- proxyTable节点

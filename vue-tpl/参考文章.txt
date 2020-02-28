@@ -1,0 +1,20 @@
+# 网络请求的几种实现
+1\封装ajax
+2\jquery
+3\vue resource
+4\axios
+5\封装promise
+6\fetch
+7\搭配async await
+
+# 前端
+https://segmentfault.com/u/tomczhang
+
+# Jquery ajax, Axios, Fetch区别之我见
+https://segmentfault.com/a/1190000012836882
+
+# 理解 JavaScript 的 async/await
+https://segmentfault.com/a/1190000007535316
+
+# axios请求的封装
+https://www.jianshu.com/p/f36faf4ea70f

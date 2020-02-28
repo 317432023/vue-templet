@@ -1,0 +1,10 @@
+
+!nginx.conf
+fastcgi.conf
+fastcgi_params
+koi-utf
+koi-win
+mime.types
+scgi_params
+uwsgi_params
+win-utf
