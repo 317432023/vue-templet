@@ -57,7 +57,7 @@ export default ajax
 Vue.prototype.ajax=ajax
 */
 
-// 导出方式三：原型导出2 调用方式this.ajax（先导入 再 Vue.use(ajax) ）
+// 导出方式三：原型导出2 调用方式this.ajax（先导入 再 Vue.use(ajax) ），需要import Vue from 'vue'
 export default{
   install(Vue,options){
     Vue.prototype.ajax=ajax

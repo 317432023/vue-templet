@@ -104,7 +104,12 @@ module.exports = {
       threadPool: happyThreadPool,
       //允许 HappyPack 输出日志
       verbose: true,
-    })
+    })/*, 
+    // 使用此插件可以省略 main.js的 import $ from 'jquery'
+    new webpack.ProvidePlugin({
+      jQuery: "jquery",
+      $: "jquery"
+    })*/
   ],
   externals:{
     /* 'axios': 'axios',
