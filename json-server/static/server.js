@@ -14,14 +14,17 @@ server.use(jsonServer.bodyParser);
 server.use(middlewares);
 
 server.use((req, res, next) => {
-  res.header('X-Hello', 'datura_lj');
+  res.header('user-defined', 'rise-auto');
+  // 允许跨域
+  res.header('Access-Control-Allow-Origin','*');
+  res.header('Access-Control-Allow-Credentials', 'true');
+  res.header('Access-Control-Allow-Methods', 'POST, GET, PATCH, DELETE, PUT');
+  res.header('Access-Control-Max-Age', '3600');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
   next();
 })
 router.render = (req, res) => {
-  res.jsonp({
-    code: 0,
-    body: res.locals.data
-  })
+  res.jsonp({code:200, msg:'ok', data: res.locals.data})
 }
 server.use("/api", router);
 
