@@ -1,0 +1,16 @@
+/*@common.css
+ *收集整理by 317432023@qq.com
+ */
+
+/**遮罩层
+ * Usage: <view v-show="showMask" class=".mask"></view>
+ */
+.mask {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 999;
+    width: 100%;
+    height: 100vh;/*for uni-app*/
+    background: rgba(0,0,0,0.4);
+}

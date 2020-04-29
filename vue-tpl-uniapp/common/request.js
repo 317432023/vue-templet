@@ -66,6 +66,7 @@ export default {
             }
             
             let _strings = new Array();
+            //console.log(typeof options.data)
             if(typeof options.data === 'string') {
                 _strings.push(options.data)
             }else if(typeof options.data === 'object'){
@@ -92,6 +93,7 @@ export default {
             _strings.push(ts);
             _strings.push('rise');
             let s = _strings.join("")
+            //console.log(s)
             options.header['signature'] = md5(s);
             options.header['timestamp'] = ts;
             //console.log('signature='+options.header['signature'] )

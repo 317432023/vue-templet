@@ -25,4 +25,8 @@
 	@import './common/uni.css';
     /*引入自定义图标库*/
     @import './common/icon.css';
+
+    /*自定义的公共css文件*/
+    @import  './common/common.css';
+    
 </style>

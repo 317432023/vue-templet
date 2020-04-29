@@ -16,7 +16,7 @@ export default {
                     if(jsonObj.code == 0) {
                         let ts0 = jsonObj.result.serverTime;
                         console.log(ts0);
-                        let diff = ts0 - new Date().getTime()/* $that.getTimeStamp() */;
+                        let diff = ts0 - /* new Date().getTime() */$that.getTimeStamp();
                         console.log(diff);
                         uni.setStorageSync('diff', diff.toString());
                         resolve(ts0)
@@ -38,7 +38,7 @@ export default {
     /**主调函数：取得服务器时间戳毫秒数。返回非0代表成功，0失败*/
     async serverTime(preferTimestamp=true) {
         let diff = uni.getStorageSync('diff');
-        if(diff) return new Date().getTime()/* this.getTimeStamp() */ + parseInt(diff);
+        if(diff) return /* new Date().getTime() */this.getTimeStamp() + parseInt(diff);
         return await this._serverTime(preferTimestamp).then(data=>data);
     },
     /**
@@ -86,5 +86,56 @@ export default {
       // Date.UTC() 方法接受的参数同日期构造函数接受最多参数时一样，返回从1970-1-1 00:00:00 UTC到指定日期的的毫秒数。
       const timeObj = Date.UTC(y, m, d, h, mm, ss, 0) - (8 * 60 * 60);
       return timeObj;
+    },
+    /**
+     * 将 Date 转化为指定格式的String
+     * 月(M)、日(d)、12小时(h)、24小时(H)、分(m)、秒(s)、周(E)、季度(q) 可以用 1-2 个占位符
+     * 年(y)可以用 1-4 个占位符，毫秒(S)只能用 1 个占位符(是 1-3 位的数字)
+     * eg:
+     * util.fmtDate(new Date(),"yyyy-MM-dd hh:mm:ss.S")==> 2006-07-02 08:09:04.423
+     * util.fmtDate(new Date(),"yyyy-MM-dd E HH:mm:ss") ==> 2009-03-10 二 20:09:04
+     * util.fmtDate(new Date(),"yyyy-MM-dd EE hh:mm:ss") ==> 2009-03-10 周二 08:09:04
+     * util.fmtDate(new Date(),"yyyy-MM-dd EEE hh:mm:ss") ==> 2009-03-10 星期二 08:09:04
+     * util.fmtDate(new Date(),"yyyy-M-d h:m:s.S") ==> 2006-7-2 8:9:4.18
+     *
+     * @param {Object} date
+     * @param {Object} fmt
+     */
+    fmtDate(date, fmt) {
+      var
+        o,
+        week;
+      o = {
+        "M+": date.getMonth() + 1, //月份
+        "d+": date.getDate(), //日
+        "h+": date.getHours() % 12 == 0 ? 12 : date.getHours() % 12, //小时
+        "H+": date.getHours(), //小时
+        "m+": date.getMinutes(), //分
+        "s+": date.getSeconds(), //秒
+        "q+": Math.floor((date.getMonth() + 3) / 3), //季度
+        "S": date.getMilliseconds() //毫秒
+      };
+      week = {
+        "0": "/u65e5",
+        "1": "/u4e00",
+        "2": "/u4e8c",
+        "3": "/u4e09",
+        "4": "/u56db",
+        "5": "/u4e94",
+        "6": "/u516d"
+      };
+    
+      if (/(y+)/.test(fmt)) {
+        fmt = fmt.replace(RegExp.$1, (date.getFullYear() + "").substr(4 - RegExp.$1.length));
+      }
+      if (/(E+)/.test(fmt)) {
+        fmt = fmt.replace(RegExp.$1, ((RegExp.$1.length > 1) ? (RegExp.$1.length > 2 ? "/u661f/u671f" : "/u5468") : "") + week[date.getDay() + ""]);
+      }
+      for (var k in o) {
+        if (new RegExp("(" + k + ")").test(fmt)) {
+          fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+        }
+      }
+      return fmt;
     }
 }
