@@ -72,9 +72,10 @@ export default {
             }else if(typeof options.data === 'object'){
                 let paramArray = new Array();
                 for(let key in options.data) {
+                    if(typeof options.data[key] != "undefined" && options.data[key] != null) 
                     paramArray.push({'name':key, 'value':options.data[key]});
                 }
-                paramArray.sort((x,y) => x['name'].localeCompare(y['name']))
+                paramArray.sort((x,y) => (x['value']).toString().localeCompare((y['value']).toString()))
                 paramArray.forEach((value, index) => {
                   _strings.push(value['value']);
                 })
