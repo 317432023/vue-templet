@@ -2,24 +2,28 @@ import config from './config.js';
 import $http from './request.js';
 
 export default {
-    async _serverTime(preferTimestamp=true,retry=3) {//async表示函数里有异步操作，await表示紧跟在后面的表达式需要等待结果;async函数返回一个Promise对象
+    async _serverTime(preferTimestamp=true,retry=3) {
         if(retry == 0) {
             console.log('serverTime retry full')
             return 0;
         }
         let $that = this;
         
-        let [err,ts] = await new Promise((resolve, reject)=>{
+        let [err,data] = await new Promise((resolve, reject)=>{
             uni.request({url: $http._getUrl(config.serverTimeUrl), method: 'GET', data:{'preferTimestamp':preferTimestamp},
                 success: res => {
                     let jsonObj = res.data;
                     if(jsonObj.code == 0) {
-                        let ts0 = jsonObj.result.serverTime;
-                        console.log(ts0);
-                        let diff = ts0 - /* new Date().getTime() */$that.getTimeStamp();
-                        console.log(diff);
-                        uni.setStorageSync('diff', diff.toString());
-                        resolve(ts0)
+                        let serverTimestamp = jsonObj.result.serverTime,
+                            ts = $that.getTimeStamp(),
+                            diff = serverTimestamp - ts
+                            
+                        console.log(serverTimestamp)
+                        console.log(diff)
+                        uni.setStorageSync('diff', diff.toString())
+                        uni.setStorageSync('ts', ts.toString())
+                        
+                        resolve(serverTimestamp)
                     }else resolve(0)
                 },
                 fail: (err) => {
@@ -32,13 +36,16 @@ export default {
             console.log('serverTime fail, retry...')
             return this._serverTime(true, --retry);
         }
-        console.log("第一次从服务器取得="+ts)
-        return ts;
+        console.log("第一次从服务器取得="+data)
+        return data;
     },
     /**主调函数：取得服务器时间戳毫秒数。返回非0代表成功，0失败*/
     async serverTime(preferTimestamp=true) {
-        let diff = uni.getStorageSync('diff');
-        if(diff) return /* new Date().getTime() */this.getTimeStamp() + parseInt(diff);
+        let diff = uni.getStorageSync('diff'), 
+            last_ts = uni.getStorageSync('ts'), 
+            ts = this.getTimeStamp()
+        if( last_ts && Math.abs( ts - last_ts) < 3600*1000*1 && diff ) 
+            return ts + parseInt(diff);
         return await this._serverTime(preferTimestamp).then(data=>data);
     },
     /**
