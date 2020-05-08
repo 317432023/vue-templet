@@ -53,8 +53,8 @@ export default {
     }
   },
   async login(options={}){
-    let url = options.url?options.url:config.loginUrl;
-    let [err, res] = await $http.post(url, options.data, {useToken: 'no'}).then(data=>[null,data]).catch(err=>[err]);
+    let url = options.url?options.url:config.loginUrl, header = options.header
+    let [err, res] = await $http.post(url, options.data, {useToken: 'no', header: header}).then(data=>[null,data]).catch(err=>[err]);
     if(!$http.errorCheck(err, res)) return false;
     // 登录成功 保存状态
     this.token = res.data.token;

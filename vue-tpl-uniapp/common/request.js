@@ -28,8 +28,7 @@ export default {
     config: {
         baseUrl: config.baseUrl,
         header: {
-            'Content-Type': 'application/json;charset=UTF-8',
-            'Content-Type': 'application/x-www-form-urlencoded'
+            'Content-Type': 'application/x-www-form-urlencoded'//'Content-Type': 'application/json;charset=UTF-8'
         },
         data: {},
         method: 'GET',
@@ -46,11 +45,14 @@ export default {
     /** MD5 (body内容（POST|PUT） + 参数值(参数名称自然排序) + 可变消息头值[token, SAAS, dvc, ver] + 时间戳消息头值 + 盐 )*/
     async request(options = {}) {
         options.url = this._getUrl(options.url);
-        options.method = options.method || this.config.method;
-        options.header = options.header || this.config.header;
-        options.dataType = options.dataType || this.config.dataType;
-        options.useToken = options.useToken || this.config.useToken;
-        options.checkToken = options.checkToken || this.config.checkToken;
+        options.method = options.method || this.config.method
+        options.header = options.header || this.config.header
+        if(!options.header['Content-Type']) {
+            options.header['Content-Type'] = 'application/x-www-form-urlencoded'
+        }
+        options.dataType = options.dataType || this.config.dataType
+        options.useToken = options.useToken || this.config.useToken
+        options.checkToken = options.checkToken || this.config.checkToken
         if(options.useToken == 'yes') {
             // 验证用户是否登录
             if(!this.checkToken(options.checkToken == 'yes')) {
@@ -75,7 +77,9 @@ export default {
                     if(typeof options.data[key] != "undefined" && options.data[key] != null) 
                     paramArray.push({'name':key, 'value':options.data[key]});
                 }
-                paramArray.sort((x,y) => (x['value']).toString().localeCompare((y['value']).toString()))
+                //paramArray.sort((x,y) => (x['value']).toString().localeCompare((y['value']).toString()))
+                //paramArray.sort((x,y) => x['name'].localeCompare(y['name']))
+                paramArray.sort( (x,y) => x['name'] > y['name']?1:(x['name'] < y['name']?-1:0) )
                 paramArray.forEach((value, index) => {
                   _strings.push(value['value']);
                 })
