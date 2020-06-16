@@ -71,18 +71,22 @@ export default {
             //console.log(typeof options.data)
             if(typeof options.data === 'string') {
                 _strings.push(options.data)
-            }else if(typeof options.data === 'object'){
-                let paramArray = new Array();
-                for(let key in options.data) {
-                    if(typeof options.data[key] != "undefined" && options.data[key] != null) 
-                    paramArray.push({'name':key, 'value':options.data[key]});
+            }else if(typeof(options.data) == "object" && (Object.prototype.toString.call(options.data).toLowerCase() == "[object object]" || Object.prototype.toString.call(options.data).toLowerCase() == "[object array]")){
+                if(options.header['Content-Type'].startsWith('application/json')){
+                    //console.log(JSON.stringify(options.data))
+                    _strings.push(JSON.stringify(options.data))
+                }else{
+                    let paramArray = new Array()
+                    for(let key in options.data) {
+                        if(typeof options.data[key] != "undefined" && options.data[key] != null) 
+                        paramArray.push({'name':key, 'value':options.data[key]})
+                    }
+                    //paramArray.sort((x,y) => x['name'].localeCompare(y['name']))
+                    paramArray.sort( (x,y) => x['name'] > y['name']?1:(x['name'] < y['name']?-1:0) )
+                    paramArray.forEach((value, index) => {
+                      _strings.push(value['value'])
+                    })
                 }
-                //paramArray.sort((x,y) => (x['value']).toString().localeCompare((y['value']).toString()))
-                //paramArray.sort((x,y) => x['name'].localeCompare(y['name']))
-                paramArray.sort( (x,y) => x['name'] > y['name']?1:(x['name'] < y['name']?-1:0) )
-                paramArray.forEach((value, index) => {
-                  _strings.push(value['value']);
-                })
             }
             for(let key in options.header) {
                 if(key == 'token') {
